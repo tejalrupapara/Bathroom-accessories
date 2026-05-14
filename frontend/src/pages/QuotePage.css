@@ -1,0 +1,184 @@
+.quote-page {
+    min-height: 100vh;
+    background: #f8faff;
+    padding: 2rem 1.5rem;
+}
+
+.quote-inner {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.quote-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 0.25rem;
+}
+
+.quote-subtitle {
+    color: #6b7280;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+}
+
+.quote-list {
+    background: #fff;
+    border: 1px solid #e8eaf0;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.quote-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid #f3f4f6;
+    gap: 1rem;
+}
+
+.quote-item:last-child {
+    border-bottom: none;
+}
+
+.item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.item-id {
+    font-size: 0.72rem;
+    color: #9ca3af;
+    font-family: monospace;
+}
+
+.item-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+.item-series {
+    font-size: 0.78rem;
+    color: #6b7280;
+}
+
+.remove-btn {
+    background: none;
+    border: 1px solid #fca5a5;
+    color: #b91c1c;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.remove-btn:hover {
+    background: #fee2e2;
+}
+
+.quote-form {
+    background: #fff;
+    border: 1px solid #e8eaf0;
+    border-radius: 14px;
+    padding: 1.75rem;
+}
+
+.quote-form h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 1.25rem;
+}
+
+.quote-form input,
+.quote-form textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid #e8eaf0;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: #1a1a2e;
+    margin-bottom: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+    background: #fafafa;
+    box-sizing: border-box;
+}
+
+.quote-form input:focus,
+.quote-form textarea:focus {
+    border-color: #2563eb;
+    background: #fff;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 13px;
+    background: #1a1a2e;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+    margin-top: 4px;
+}
+
+.submit-btn:hover {
+    background: #2563eb;
+}
+
+/* Empty state */
+.quote-empty {
+    text-align: center;
+    padding: 5rem 2rem;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.quote-empty .empty-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.quote-empty h2 {
+    font-size: 1.3rem;
+    color: #1a1a2e;
+    margin-bottom: 0.5rem;
+}
+
+.quote-empty p {
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+}
+
+.back-btn {
+    display: inline-block;
+    background: #1a1a2e;
+    color: #fff;
+    text-decoration: none;
+    padding: 11px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.back-btn:hover {
+    background: #2563eb;
+}
+
+@media (max-width: 768px) {
+    .quote-item {
+        padding: 12px 16px;
+    }
+}
