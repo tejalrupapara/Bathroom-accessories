@@ -1,82 +1,79 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useQuote } from "../context/QuoteContext";
 import "./Navbar.css";
 
 export default function Navbar() {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const { quoteItems } = useQuote();
-    const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { quoteItems } = useQuote();
+  const location = useLocation();
 
-    const navLinks = [
-        { label: "Home", path: "/" },
-        { label: "Collection", path: "/collection" },
-        { label: "Products", path: "/products" },
-        { label: "Contact", path: "/contact" },
-    ];
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", fn);
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
 
-    return (
-        <nav className="navbar">
-            <div className="navbar-inner">
-                {/* Logo */}
-                <Link to="/" className="brand">
-                    <span className="brand-icon">◈</span>
-                    AquaBath
-                </Link>
+  useEffect(() => { setMenuOpen(false); }, [location]);
 
-                {/* Desktop nav links */}
-                <ul className="nav-links">
-                    {navLinks.map((link) => (
-                        <li key={link.path}>
-                            <Link
-                                to={link.path}
-                                className={location.pathname === link.path ? "active" : ""}
-                            >
-                                {link.label}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
+  const links = [
+    { label: "Home",       path: "/" },
+    { label: "Collection", path: "/collection" },
+    { label: "Contact",    path: "/contact" },
+  ];
 
-                {/* Quote button */}
-                <Link to="/quote" className="quote-btn">
-                    <span className="quote-icon">🛒</span>
-                    <span>Quote</span>
-                    {quoteItems.length > 0 && (
-                        <span className="quote-badge">{quoteItems.length}</span>
-                    )}
-                </Link>
+  return (
+    <header className={`nx-header ${scrolled ? "scrolled" : ""}`}>
+      <div className="nx-nav container-xxl">
 
-                {/* Hamburger (mobile) */}
-                <button
-                    className="hamburger"
-                    onClick={() => setMenuOpen(!menuOpen)}
-                    aria-label="Toggle menu"
-                >
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
+        {/* Brand */}
+        <Link to="/" className="nx-brand">
+          <div className="nx-brand-emblem">N</div>
+          <div>
+            <div className="nx-brand-name">NEXXORA</div>
+            <div className="nx-brand-sub">by Greenvolt Enterprise</div>
+          </div>
+        </Link>
 
-            {/* Mobile menu */}
-            {menuOpen && (
-                <div className="mobile-menu">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.path}
-                            to={link.path}
-                            className={location.pathname === link.path ? "active" : ""}
-                            onClick={() => setMenuOpen(false)}
-                        >
-                            {link.label}
-                        </Link>
-                    ))}
-                    <Link to="/quote" className="mobile-quote" onClick={() => setMenuOpen(false)}>
-                        🛒 Quote ({quoteItems.length})
-                    </Link>
-                </div>
-            )}
-        </nav>
-    );
+        {/* Desktop Links */}
+        <ul className="nx-links d-none d-lg-flex">
+          {links.map(l => (
+            <li key={l.path}>
+              <Link to={l.path} className={`nx-link ${location.pathname===l.path?"active":""}`}>
+                {l.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* Actions */}
+        <div className="d-flex align-items-center gap-3">
+          <Link to="/quote" className="nx-quote-btn d-none d-md-flex">
+            <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            Get Quote
+            {quoteItems.length > 0 && <span className="nx-badge">{quoteItems.length}</span>}
+          </Link>
+
+          <button className={`nx-hamburger d-lg-none ${menuOpen?"is-open":""}`} onClick={()=>setMenuOpen(!menuOpen)}>
+            <span/><span/><span/>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      <div className={`nx-mobile-menu ${menuOpen?"open":""}`}>
+        {links.map(l => (
+          <Link key={l.path} to={l.path} className={`nx-mobile-link ${location.pathname===l.path?"active":""}`}>
+            {l.label}
+          </Link>
+        ))}
+        <Link to="/quote" className="nx-mobile-quote">
+          📋 Get Quote {quoteItems.length > 0 && `(${quoteItems.length})`}
+        </Link>
+      </div>
+    </header>
+  );
 }
