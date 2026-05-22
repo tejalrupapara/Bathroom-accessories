@@ -1,5 +1,24 @@
 .contact-page { min-height: 100vh; background: var(--off-white); }
 
+/* Logo in header */
+.contact-header-logo {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 4px 16px rgba(201,168,76,0.5));
+}
+
+/* Logo in catalogue box */
+.cat-box-logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin: 0 auto 0.75rem;
+  display: block;
+  filter: drop-shadow(0 4px 16px rgba(201,168,76,0.4));
+}
+
 /* ── Header ── */
 .contact-header {
   background: linear-gradient(135deg, #060f0f 0%, #0a1e1e 50%, #0e3535 100%);

@@ -66,6 +66,7 @@ export default function ContactPage() {
         <div className="contact-header-glow" />
         <div className="container-xxl contact-header-inner">
           <p className="cp-breadcrumb">Home / Contact Us</p>
+          <img src="/logo.png" alt="Nexxora" className="contact-header-logo" />
           <h1 className="contact-title">Get In Touch</h1>
           <p className="contact-subtitle">
             Have questions or need assistance? Reach out via phone, WhatsApp, or email — we're here to help.
@@ -229,7 +230,7 @@ export default function ContactPage() {
 
               {/* Catalogue download */}
               <div className="catalogue-box">
-                <div className="cat-box-icon">📄</div>
+                <img src="/logo.png" alt="Nexxora" className="cat-box-logo" />
                 <div>
                   <h4 className="cat-box-title">Download Catalogue</h4>
                   <p className="cat-box-sub">Browse our full Nexxora product catalogue with all 7 series.</p>
