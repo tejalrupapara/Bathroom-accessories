@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import { products, seriesInfo } from "../data/products";
 import "./HomePage.css";
 
@@ -16,13 +17,30 @@ const features = [
   { icon:"◎", title:"Hotels & Homes",     desc:"Trusted by leading hotels and private residences across India." },
 ];
 
+/* ── Scroll-reveal hook ── */
+function useScrollReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll("[data-reveal]");
+    if (!els.length) return;
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add("in-view"); io.unobserve(e.target); }
+      }),
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+    );
+    els.forEach(el => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+}
+
 export default function HomePage() {
+  useScrollReveal();
+
   return (
     <div className="home-page">
 
-      {/* ══════ HERO ══════ */}
+      {/* HERO */}
       <section className="hero-section">
-        {/* Decorative orbs */}
         <div className="hero-orb orb-1" />
         <div className="hero-orb orb-2" />
         <div className="hero-orb orb-3" />
@@ -30,33 +48,28 @@ export default function HomePage() {
         <div className="container-xxl hero-inner">
           <div className="row align-items-center g-5">
 
-            {/* Left text */}
             <div className="col-lg-6">
-              <div className="anim-up">
+              <div className="anim-up" style={{"--d":"0ms"}}>
                 <span className="section-label">Precision Crafted Acrylic Bathware</span>
               </div>
-              <h1 className="hero-title anim-up-1">
-                Make Your<br/>
-                Bathroom<br/>
+              <h1 className="hero-title anim-up" style={{"--d":"120ms"}}>
+                Make Your<br/>Bathroom<br/>
                 <span className="hero-italic">Amazing.</span>
               </h1>
-              <p className="hero-desc anim-up-2">
+              <p className="hero-desc anim-up" style={{"--d":"240ms"}}>
                 Premium bathroom accessories by <strong>Greenvolt Enterprise</strong> — 7 exclusive series, 9 acrylic variants, 3 premium finishes. Crafted for homes and hotels that demand the finest.
               </p>
-              <div className="d-flex flex-wrap gap-3 mb-5 anim-up-3">
+              <div className="d-flex flex-wrap gap-3 mb-5 anim-up" style={{"--d":"360ms"}}>
                 <Link to="/collection" className="btn btn-gold btn-lg px-4 py-3">
                   Explore Collection
                   <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                   </svg>
                 </Link>
-                <Link to="/quote" className="btn btn-outline-white btn-lg px-4 py-3">
-                  Get Quote
-                </Link>
+                <Link to="/quote" className="btn btn-outline-white btn-lg px-4 py-3">Get Quote</Link>
               </div>
 
-              {/* Stats */}
-              <div className="hero-stats anim-up-4">
+              <div className="hero-stats anim-up" style={{"--d":"480ms"}}>
                 {[
                   { n:`${products.length}+`, l:"Products" },
                   { n:"7",  l:"Series"   },
@@ -71,38 +84,35 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right visual card */}
-            <div className="col-lg-6 d-flex justify-content-center anim-scale">
+            <div className="col-lg-6 d-flex justify-content-center anim-scale" style={{"--d":"200ms"}}>
               <div className="hero-visual anim-float">
                 <div className="hv-top">
                   <span className="hv-brand">NEXXORA</span>
                   <span className="hv-tag">Premium Bathware</span>
                 </div>
                 <div className="hv-grid">
-                  {series.map(s => (
-                    <div key={s} className="hv-chip"
-                      style={{background: seriesInfo[s].bg, color: seriesInfo[s].accent}}>
+                  {series.map((s, i) => (
+                    <div key={s} className="hv-chip hv-chip-anim"
+                      style={{background: seriesInfo[s].bg, color: seriesInfo[s].accent, "--ci": i}}>
                       <span className="hv-dot" style={{background: seriesInfo[s].accent}}/>
                       {s}
                     </div>
                   ))}
                 </div>
                 <div className="hv-finishes">
-                  {finishes.map(f => (
-                    <div key={f.name} className="hv-finish" style={{background:f.color,color:f.text}}>
+                  {finishes.map((f, i) => (
+                    <div key={f.name} className="hv-finish hv-finish-anim"
+                      style={{background:f.color, color:f.text, "--fi": i}}>
                       {f.name}
                     </div>
                   ))}
                 </div>
-                <div className="hv-footer">
-                  Powered by Greenvolt Enterprise · +91 99986 64704
-                </div>
+                <div className="hv-footer">Powered by Greenvolt Enterprise · +91 99986 64704</div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Wave */}
         <div className="hero-wave">
           <svg viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0,45 C480,90 960,0 1440,45 L1440,90 L0,90 Z" fill="var(--off-white)"/>
@@ -110,10 +120,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ══════ SERIES ══════ */}
+      {/* SERIES */}
       <section className="series-section">
         <div className="container-xxl">
-          <div className="text-center mb-5">
+          <div className="text-center mb-5" data-reveal="fade-up">
             <span className="section-label">Our Collections</span>
             <h2 className="section-heading">7 Premium Series</h2>
             <div className="gold-divider"/>
@@ -125,9 +135,8 @@ export default function HomePage() {
               const info  = seriesInfo[s];
               const count = products.filter(p => p.category===s).length;
               return (
-                <div key={s} className="col-6 col-md-4 col-xl-3">
-                  <Link to="/collection" className="series-card"
-                    style={{"--acc":info.accent,"--cbg":info.bg}}>
+                <div key={s} className="col-6 col-md-4 col-xl-3" data-reveal="fade-up" style={{"--ri": i}}>
+                  <Link to="/collection" className="series-card" style={{"--acc":info.accent,"--cbg":info.bg}}>
                     <div className="sc-number">0{i+1}</div>
                     <h3 className="sc-name">{s}</h3>
                     <p className="sc-desc">{info.desc}</p>
@@ -139,7 +148,7 @@ export default function HomePage() {
                 </div>
               );
             })}
-            <div className="col-6 col-md-4 col-xl-3">
+            <div className="col-6 col-md-4 col-xl-3" data-reveal="fade-up" style={{"--ri": series.length}}>
               <Link to="/collection" className="series-card series-all-card">
                 <div className="sa-icon">✦</div>
                 <h3>All Products</h3>
@@ -151,11 +160,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ══════ WHY NEXXORA ══════ */}
+      {/* WHY NEXXORA */}
       <section className="why-section">
         <div className="container-xxl">
           <div className="row align-items-center g-5">
-            <div className="col-lg-5">
+            <div className="col-lg-5" data-reveal="fade-right">
               <span className="section-label">Why Nexxora</span>
               <h2 className="section-heading text-start">Quality Is Not<br/>An Act —<br/><em className="text-gold">It's A Habit.</em></h2>
               <div className="gold-divider left"/>
@@ -178,15 +187,13 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-              <Link to="/collection" className="btn btn-teal mt-4 px-4 py-3">
-                Browse Collection →
-              </Link>
+              <Link to="/collection" className="btn btn-teal mt-4 px-4 py-3">Browse Collection →</Link>
             </div>
 
             <div className="col-lg-7">
               <div className="row g-3">
                 {features.map((f,i) => (
-                  <div key={i} className="col-sm-6">
+                  <div key={i} className="col-sm-6" data-reveal="fade-up" style={{"--ri": i}}>
                     <div className="feature-card">
                       <div className="fc-icon">{f.icon}</div>
                       <h4 className="fc-title">{f.title}</h4>
@@ -200,11 +207,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ══════ FINISHES ══════ */}
+      {/* FINISHES */}
       <section className="finishes-section">
         <div className="finishes-bg"/>
         <div className="container-xxl finishes-inner">
-          <div className="text-center mb-5">
+          <div className="text-center mb-5" data-reveal="fade-up">
             <span className="section-label" style={{color:"#fff",borderColor:"rgba(255,255,255,0.25)",background:"rgba(255,255,255,0.08)"}}>
               Materials & Finishes
             </span>
@@ -213,10 +220,9 @@ export default function HomePage() {
             <p className="section-sub" style={{color:"rgba(255,255,255,0.6)"}}>Pick the finish and acrylic variant that matches your bathroom's personality</p>
           </div>
 
-          {/* Finish cards */}
           <div className="row g-4 justify-content-center mb-5">
-            {finishes.map(f => (
-              <div key={f.name} className="col-md-4">
+            {finishes.map((f, i) => (
+              <div key={f.name} className="col-md-4" data-reveal="fade-up" style={{"--ri": i}}>
                 <div className="finish-card" style={{"--fc":f.color,"--ft":f.text}}>
                   <div className="finish-orb" style={{background:f.color}}/>
                   <h3 className="finish-name">{f.name}</h3>
@@ -226,20 +232,21 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* Acrylic chips */}
-          <div className="text-center">
+          <div className="text-center" data-reveal="fade-up">
             <p className="acrylic-label">9 Acrylic Sheet Variants</p>
             <div className="acrylic-chips">
-              {acrylic.map(v => <span key={v} className="acrylic-chip">{v}</span>)}
+              {acrylic.map((v, i) => (
+                <span key={v} className="acrylic-chip acrylic-chip-anim" style={{"--ai": i}}>{v}</span>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ══════ CTA ══════ */}
+      {/* CTA */}
       <section className="cta-section">
         <div className="container-xxl">
-          <div className="cta-box">
+          <div className="cta-box" data-reveal="fade-up">
             <div className="cta-glow"/>
             <div className="row align-items-center gy-4">
               <div className="col-lg-7">
@@ -256,13 +263,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ══════ FOOTER ══════ */}
+      {/* FOOTER */}
       <footer className="nx-footer">
         <div className="container-xxl">
           <div className="row gy-5 footer-top">
-            <div className="col-lg-4">
+            <div className="col-lg-4" data-reveal="fade-up" style={{"--ri":0}}>
               <div className="footer-brand-row">
-                <div className="footer-emblem">N</div>
+                <img src="/logo.png" alt="Nexxora" className="footer-logo-img" />
                 <div>
                   <div className="footer-brand-name">NEXXORA</div>
                   <div className="footer-brand-sub">by Greenvolt Enterprise</div>
@@ -275,7 +282,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="col-6 col-lg-2 offset-lg-1">
+            <div className="col-6 col-lg-2 offset-lg-1" data-reveal="fade-up" style={{"--ri":1}}>
               <h5 className="footer-heading">Navigate</h5>
               <ul className="footer-links">
                 <li><Link to="/">Home</Link></li>
@@ -284,14 +291,14 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <div className="col-6 col-lg-2">
+            <div className="col-6 col-lg-2" data-reveal="fade-up" style={{"--ri":2}}>
               <h5 className="footer-heading">Series</h5>
               <ul className="footer-links">
                 {series.map(s => <li key={s}><span className="footer-series-item">{s}</span></li>)}
               </ul>
             </div>
 
-            <div className="col-lg-3">
+            <div className="col-lg-3" data-reveal="fade-up" style={{"--ri":3}}>
               <h5 className="footer-heading">About</h5>
               <p className="footer-about">
                 Nexxora specializes in premium bathroom accessories with stylish, functional designs and affordable prices for consumers and hotels alike.

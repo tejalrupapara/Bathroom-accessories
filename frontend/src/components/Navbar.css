@@ -19,6 +19,15 @@
 
 /* Brand */
 .nx-brand { display:flex; align-items:center; gap:12px; }
+/* Real logo image */
+.nx-brand-logo {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
 .nx-brand-emblem {
   width: 42px; height: 42px; border-radius: 11px;
   background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);

@@ -19,6 +19,7 @@ export default function Navbar() {
 
   const links = [
     { label: "Home",       path: "/" },
+    { label: "About",      path: "/about" },
     { label: "Collection", path: "/collection" },
     { label: "Contact",    path: "/contact" },
   ];
@@ -27,9 +28,9 @@ export default function Navbar() {
     <header className={`nx-header ${scrolled ? "scrolled" : ""}`}>
       <div className="nx-nav container-xxl">
 
-        {/* Brand */}
+        {/* Brand with real logo */}
         <Link to="/" className="nx-brand">
-          <div className="nx-brand-emblem">N</div>
+          <img src="/logo.png" alt="Nexxora Logo" className="nx-brand-logo" />
           <div>
             <div className="nx-brand-name">NEXXORA</div>
             <div className="nx-brand-sub">by Greenvolt Enterprise</div>
@@ -40,7 +41,7 @@ export default function Navbar() {
         <ul className="nx-links d-none d-lg-flex">
           {links.map(l => (
             <li key={l.path}>
-              <Link to={l.path} className={`nx-link ${location.pathname===l.path?"active":""}`}>
+              <Link to={l.path} className={`nx-link ${location.pathname === l.path ? "active" : ""}`}>
                 {l.label}
               </Link>
             </li>
@@ -56,17 +57,16 @@ export default function Navbar() {
             Get Quote
             {quoteItems.length > 0 && <span className="nx-badge">{quoteItems.length}</span>}
           </Link>
-
-          <button className={`nx-hamburger d-lg-none ${menuOpen?"is-open":""}`} onClick={()=>setMenuOpen(!menuOpen)}>
+          <button className={`nx-hamburger d-lg-none ${menuOpen ? "is-open" : ""}`} onClick={() => setMenuOpen(!menuOpen)}>
             <span/><span/><span/>
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      <div className={`nx-mobile-menu ${menuOpen?"open":""}`}>
+      <div className={`nx-mobile-menu ${menuOpen ? "open" : ""}`}>
         {links.map(l => (
-          <Link key={l.path} to={l.path} className={`nx-mobile-link ${location.pathname===l.path?"active":""}`}>
+          <Link key={l.path} to={l.path} className={`nx-mobile-link ${location.pathname === l.path ? "active" : ""}`}>
             {l.label}
           </Link>
         ))}
