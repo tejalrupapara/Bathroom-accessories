@@ -1,12 +1,13 @@
+import { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { products, seriesInfo } from "../data/products";
 import "./HomePage.css";
 
 const series = ["Sky","Prism","Lume","Vector","Nova","Neo","Prime"];
 const finishes = [
-  { name:"Black",    color:"#1a1a1a", text:"#fff",      desc:"Bold & Modern"    },
-  { name:"Rose Gold",color:"#b76e79", text:"#fff",      desc:"Warm & Romantic"  },
-  { name:"Gold",     color:"#c9a84c", text:"#1a1a1a",   desc:"Luxe & Timeless"  },
+  { name:"Black",    color:"#1a1a1a", text:"#fff",    desc:"Bold & Modern"   },
+  { name:"Rose Gold",color:"#b76e79", text:"#fff",    desc:"Warm & Romantic" },
+  { name:"Gold",     color:"#c9a84c", text:"#1a1a1a", desc:"Luxe & Timeless" },
 ];
 const acrylic = ["Zebra Marble","Grey Marble","Black Smock","Blue Marble","Pink Marble","White Marble","Clear","Brown Marble","Milky White"];
 const features = [
@@ -16,16 +17,136 @@ const features = [
   { icon:"◎", title:"Hotels & Homes",     desc:"Trusted by leading hotels and private residences across India." },
 ];
 
+/* ── 3D product definitions ── */
+const products3d = [
+  {
+    cls: "c1",
+    name: "Towel Ring",
+    series: "Sky Series",
+    bg: "linear-gradient(135deg,rgba(13,107,107,0.6),rgba(8,79,79,0.85))",
+    icon: (
+      <svg width="36" height="36" viewBox="0 0 48 48" fill="none">
+        <ellipse cx="24" cy="24" rx="16" ry="16" stroke="#c9a84c" strokeWidth="3"/>
+        <ellipse cx="24" cy="24" rx="10" ry="10" stroke="rgba(201,168,76,0.4)" strokeWidth="1.5"/>
+        <line x1="24" y1="40" x2="24" y2="46" stroke="#c9a84c" strokeWidth="3" strokeLinecap="round"/>
+        <line x1="14" y1="46" x2="34" y2="46" stroke="#c9a84c" strokeWidth="3" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
+    cls: "c2",
+    name: "Soap Dispenser",
+    series: "Prism",
+    bg: "linear-gradient(135deg,rgba(139,69,19,0.5),rgba(92,74,42,0.75))",
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+        <rect x="12" y="18" width="20" height="26" rx="4" stroke="#c9a84c" strokeWidth="2.5"/>
+        <path d="M20 18 L20 12 L28 12 L28 18" stroke="#c9a84c" strokeWidth="2.5"/>
+        <path d="M28 14 L36 10" stroke="#c9a84c" strokeWidth="2" strokeLinecap="round"/>
+        <circle cx="36" cy="9" r="3" fill="#c9a84c" opacity="0.7"/>
+        <line x1="22" y1="30" x2="22" y2="38" stroke="rgba(201,168,76,0.45)" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
+    cls: "c3",
+    name: "Towel Bar",
+    series: "Vector",
+    bg: "linear-gradient(135deg,rgba(26,26,26,0.65),rgba(26,26,46,0.85))",
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+        <line x1="8" y1="24" x2="40" y2="24" stroke="#c9a84c" strokeWidth="3" strokeLinecap="round"/>
+        <rect x="6" y="20" width="6" height="8" rx="2" fill="rgba(201,168,76,0.25)" stroke="#c9a84c" strokeWidth="1.5"/>
+        <rect x="36" y="20" width="6" height="8" rx="2" fill="rgba(201,168,76,0.25)" stroke="#c9a84c" strokeWidth="1.5"/>
+        <path d="M14 24 Q24 18 34 24" stroke="rgba(255,255,255,0.12)" strokeWidth="6" strokeLinecap="round" fill="none"/>
+      </svg>
+    ),
+  },
+  {
+    cls: "c4",
+    name: "Robe Hook",
+    series: "Nova",
+    bg: "linear-gradient(135deg,rgba(17,24,39,0.65),rgba(17,24,39,0.9))",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 48 48" fill="none">
+        <path d="M24 8 C24 8 36 16 36 28 C36 32 32 36 28 36 L20 36 C16 36 12 32 12 28" stroke="#c9a84c" strokeWidth="2.5" strokeLinecap="round"/>
+        <circle cx="24" cy="8" r="4" stroke="#c9a84c" strokeWidth="2"/>
+        <line x1="24" y1="4" x2="24" y2="2" stroke="#c9a84c" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+    ),
+  },
+  {
+    cls: "c5",
+    name: "T.P. Holder",
+    series: "Neo",
+    bg: "linear-gradient(135deg,rgba(124,58,30,0.55),rgba(92,74,42,0.75))",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 48 48" fill="none">
+        <line x1="10" y1="12" x2="38" y2="12" stroke="#c9a84c" strokeWidth="2.5" strokeLinecap="round"/>
+        <line x1="10" y1="12" x2="10" y2="42" stroke="#c9a84c" strokeWidth="2.5" strokeLinecap="round"/>
+        <ellipse cx="28" cy="28" rx="10" ry="12" stroke="#c9a84c" strokeWidth="2"/>
+        <ellipse cx="28" cy="28" rx="5" ry="6" stroke="rgba(201,168,76,0.4)" strokeWidth="1.5"/>
+      </svg>
+    ),
+  },
+];
+
 export default function HomePage() {
+  const stageRef = useRef(null);
+  const heroRef  = useRef(null);
+
+  useEffect(() => {
+    const hero  = heroRef.current;
+    const stage = stageRef.current;
+    if (!hero || !stage) return;
+
+    let raf;
+    let targetX = 0, targetY = 0;
+    let currentX = 0, currentY = 0;
+
+    const onMove = e => {
+      const rect = hero.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top  + rect.height / 2;
+      targetX = (e.clientX - cx) / (rect.width  / 2);
+      targetY = (e.clientY - cy) / (rect.height / 2);
+    };
+    const onLeave = () => { targetX = 0; targetY = 0; };
+
+    const tick = () => {
+      currentX += (targetX - currentX) * 0.06;
+      currentY += (targetY - currentY) * 0.06;
+      stage.style.transform =
+        `translateY(-50%) rotateY(${currentX * 7}deg) rotateX(${-currentY * 4}deg)`;
+      raf = requestAnimationFrame(tick);
+    };
+
+    hero.addEventListener("mousemove", onMove);
+    hero.addEventListener("mouseleave", onLeave);
+    raf = requestAnimationFrame(tick);
+    return () => {
+      hero.removeEventListener("mousemove", onMove);
+      hero.removeEventListener("mouseleave", onLeave);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <div className="home-page">
 
       {/* ══════ HERO ══════ */}
-      <section className="hero-section">
-        {/* Decorative orbs */}
+      <section className="hero-section" ref={heroRef}>
         <div className="hero-orb orb-1" />
         <div className="hero-orb orb-2" />
         <div className="hero-orb orb-3" />
+        <div className="hero-grid-lines" />
+
+        {/* Floating particles */}
+        <span className="hero-particle p1" />
+        <span className="hero-particle p2" />
+        <span className="hero-particle p3" />
+        <span className="hero-particle p4" />
+        <span className="hero-particle p5" />
 
         <div className="container-xxl hero-inner">
           <div className="row align-items-center g-5">
@@ -54,8 +175,6 @@ export default function HomePage() {
                   Get Quote
                 </Link>
               </div>
-
-              {/* Stats */}
               <div className="hero-stats anim-up-4">
                 {[
                   { n:`${products.length}+`, l:"Products" },
@@ -71,34 +190,31 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right visual card */}
+            {/* Right — 3D stage */}
             <div className="col-lg-6 d-flex justify-content-center anim-scale">
-              <div className="hero-visual anim-float">
-                <div className="hv-top">
-                  <img src="/logo.png" alt="Nexxora" className="hv-logo" />
-                  <span className="hv-tag">Premium Bathware</span>
-                </div>
-                <div className="hv-grid">
-                  {series.map(s => (
-                    <div key={s} className="hv-chip"
-                      style={{background: seriesInfo[s].bg, color: seriesInfo[s].accent}}>
-                      <span className="hv-dot" style={{background: seriesInfo[s].accent}}/>
-                      {s}
+              <div className="hero-3d-wrap">
+                <div className="hero-3d-stage" ref={stageRef}>
+
+                  {/* Ground shadow */}
+                  <div className="stage-shadow" />
+
+                  {products3d.map(p => (
+                    <div key={p.cls} className={`prod-card-3d ${p.cls}`}>
+                      <div className="pc3-shine" />
+                      <div className="pc3-icon" style={{ background: p.bg }}>
+                        {p.icon}
+                      </div>
+                      <span className="pc3-name">{p.name}</span>
+                      <span className="pc3-series">{p.series}</span>
                     </div>
                   ))}
                 </div>
-                <div className="hv-finishes">
-                  {finishes.map(f => (
-                    <div key={f.name} className="hv-finish" style={{background:f.color,color:f.text}}>
-                      {f.name}
-                    </div>
-                  ))}
-                </div>
-                <div className="hv-footer">
-                  Powered by Greenvolt Enterprise · +91 99986 64704
-                </div>
+
+                {/* Corner label */}
+                <p className="stage-hint">Hover to explore · {products.length}+ products</p>
               </div>
             </div>
+
           </div>
         </div>
 
@@ -119,15 +235,14 @@ export default function HomePage() {
             <div className="gold-divider"/>
             <p className="section-sub mt-3">Each series crafted with a unique aesthetic, material palette, and character</p>
           </div>
-
           <div className="row g-3">
             {series.map((s,i) => {
               const info  = seriesInfo[s];
-              const count = products.filter(p => p.category===s).length;
+              const count = products.filter(p => p.category === s).length;
               return (
                 <div key={s} className="col-6 col-md-4 col-xl-3">
                   <Link to="/collection" className="series-card"
-                    style={{"--acc":info.accent,"--cbg":info.bg}}>
+                    style={{"--acc": info.accent, "--cbg": info.bg}}>
                     <div className="sc-number">0{i+1}</div>
                     <h3 className="sc-name">{s}</h3>
                     <p className="sc-desc">{info.desc}</p>
@@ -182,7 +297,6 @@ export default function HomePage() {
                 Browse Collection →
               </Link>
             </div>
-
             <div className="col-lg-7">
               <div className="row g-3">
                 {features.map((f,i) => (
@@ -212,8 +326,6 @@ export default function HomePage() {
             <div className="gold-divider"/>
             <p className="section-sub" style={{color:"rgba(255,255,255,0.6)"}}>Pick the finish and acrylic variant that matches your bathroom's personality</p>
           </div>
-
-          {/* Finish cards */}
           <div className="row g-4 justify-content-center mb-5">
             {finishes.map(f => (
               <div key={f.name} className="col-md-4">
@@ -225,8 +337,6 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-
-          {/* Acrylic chips */}
           <div className="text-center">
             <p className="acrylic-label">9 Acrylic Sheet Variants</p>
             <div className="acrylic-chips">
@@ -270,11 +380,10 @@ export default function HomePage() {
               </div>
               <p className="footer-tagline">Precision Crafted Acrylic Bathware — transforming bathrooms across India since day one.</p>
               <div className="footer-contact-pills">
-                <a href="tel:+919998664704" className="fcp">📞 +91 99986 64704</a>
+                <a href="tel:+919998664704"        className="fcp">📞 +91 99986 64704</a>
                 <a href="mailto:greenvolt28@gmail.com" className="fcp">✉️ greenvolt28@gmail.com</a>
               </div>
             </div>
-
             <div className="col-6 col-lg-2 offset-lg-1">
               <h5 className="footer-heading">Navigate</h5>
               <ul className="footer-links">
@@ -283,14 +392,12 @@ export default function HomePage() {
                 <li><Link to="/quote">Get Quote</Link></li>
               </ul>
             </div>
-
             <div className="col-6 col-lg-2">
               <h5 className="footer-heading">Series</h5>
               <ul className="footer-links">
                 {series.map(s => <li key={s}><span className="footer-series-item">{s}</span></li>)}
               </ul>
             </div>
-
             <div className="col-lg-3">
               <h5 className="footer-heading">About</h5>
               <p className="footer-about">
@@ -298,7 +405,6 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-
           <div className="footer-bottom">
             <span>© 2025 Nexxora — Greenvolt Enterprise. All rights reserved.</span>
             <span>Precision Crafted Bathware</span>

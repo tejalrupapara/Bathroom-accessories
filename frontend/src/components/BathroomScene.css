@@ -1,0 +1,385 @@
+/* ══════════════════════════════════════════
+   BathroomScene3D.css
+   Drop into: src/components/BathroomScene3D.css
+   ══════════════════════════════════════════ */
+
+/* ── Wrapper ── */
+.bs3d-wrap {
+  width: 100%;
+  min-height: 560px;
+  background: linear-gradient(160deg, #1a2e2e 0%, #0d1f1f 40%, #071515 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 44px 20px 36px;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* ── Tile grid BG ── */
+.bs3d-tiles {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+
+/* ── Glow orbs ── */
+.bs3d-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.bs3d-orb1 {
+  width: 420px; height: 420px;
+  top: -120px; right: -80px;
+  background: radial-gradient(circle, rgba(13, 107, 107, 0.32) 0%, transparent 70%);
+}
+.bs3d-orb2 {
+  width: 280px; height: 280px;
+  bottom: -60px; left: -40px;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.16) 0%, transparent 70%);
+}
+
+/* ── Floating particles ── */
+.bs3d-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.bs3d-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: bs3dRise linear infinite;
+}
+@keyframes bs3dRise {
+  0%   { transform: translateY(0) scale(1); opacity: 0.55; }
+  100% { transform: translateY(-340px) scale(0); opacity: 0; }
+}
+
+/* ── 3D Scene container ── */
+.bs3d-scene {
+  position: relative;
+  width: 520px;
+  max-width: 100%;
+  perspective: 960px;
+  margin: 0 auto;
+}
+
+/* ── Main floating 3D group ── */
+.bs3d-3d {
+  transform-style: preserve-3d;
+  animation: bs3dFloat 5.5s ease-in-out infinite;
+  position: relative;
+}
+@keyframes bs3dFloat {
+  0%, 100% { transform: rotateX(4deg) rotateY(-5deg) translateY(0px); }
+  50%       { transform: rotateX(2deg) rotateY(5deg) translateY(-16px); }
+}
+
+/* ── Wall ── */
+.bs3d-wall {
+  width: 100%;
+  height: 270px;
+  background: linear-gradient(180deg, #c8ccd0 0%, #b8bcc0 100%);
+  border-radius: 12px 12px 0 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.18);
+}
+.bs3d-light-beam {
+  position: absolute;
+  top: 0; right: 15%;
+  width: 160px; height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Tiles */
+.bs3d-tile {
+  position: absolute;
+  width: 44px; height: 30px;
+  background: linear-gradient(135deg, #d0d4d8 0%, #c0c4c8 50%, #c8ccce 100%);
+  border: 1px solid rgba(148, 153, 158, 0.55);
+  border-radius: 1px;
+}
+
+/* ── Products row ── */
+.bs3d-products {
+  position: absolute;
+  bottom: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 88%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 16px;
+  z-index: 12;
+  padding: 0 8px;
+}
+
+/* Shared wobble animations */
+.bs3d-wobble1 {
+  animation: bs3dWobble1 4s ease-in-out infinite;
+}
+.bs3d-wobble2 {
+  animation: bs3dWobble2 4.8s ease-in-out infinite;
+}
+@keyframes bs3dWobble1 {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  25%       { transform: rotate(1.5deg) translateY(-2px); }
+  75%       { transform: rotate(-1deg) translateY(1px); }
+}
+@keyframes bs3dWobble2 {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  30%       { transform: rotate(-1.5deg) translateY(-3px); }
+  70%       { transform: rotate(1deg) translateY(0px); }
+}
+
+/* Shine sweep (shared) */
+.bs3d-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.14) 50%, transparent 70%);
+  animation: bs3dShineSweep 4.5s 2.5s ease-in-out infinite;
+  border-radius: inherit;
+  pointer-events: none;
+}
+@keyframes bs3dShineSweep {
+  0%        { transform: translateX(-130%); }
+  40%, 100% { transform: translateX(230%); }
+}
+
+/* ── Toothbrush ── */
+.bs3d-toothbrush {
+  width: 10px; height: 80px;
+  background: linear-gradient(180deg, #3a8fd4, #5ab0f0);
+  border-radius: 5px 5px 2px 2px;
+  position: relative;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  animation: bs3dWobble1 4.2s 0.5s ease-in-out infinite;
+}
+.bs3d-brush-head {
+  position: absolute;
+  top: -7px; left: -4px;
+  width: 18px; height: 14px;
+  background: #e8f4f8;
+  border-radius: 5px;
+}
+
+/* ── Wire holder ── */
+.bs3d-wire-holder {
+  width: 38px; height: 64px;
+  flex-shrink: 0;
+  animation: bs3dWobble2 4.5s 1s ease-in-out infinite;
+}
+.bs3d-wire-holder svg { width: 100%; height: 100%; }
+
+/* ── Tube ── */
+.bs3d-tube {
+  width: 28px; height: 100px;
+  background: linear-gradient(135deg, #f0ede0 0%, #e8e5d5 40%, #d0cdc0 100%);
+  border-radius: 14px 14px 4px 4px;
+  position: relative;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.28);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.bs3d-tube-cap {
+  position: absolute;
+  top: -8px; left: 50%; transform: translateX(-50%);
+  width: 14px; height: 10px;
+  background: linear-gradient(180deg, #c8a860, #a08040);
+  border-radius: 3px;
+}
+.bs3d-tube-label {
+  position: absolute;
+  top: 22px; left: 50%;
+  transform: translateX(-50%) rotate(-90deg);
+  font-size: 5px; font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #6a5a2a;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  pointer-events: none;
+}
+
+/* ── Shampoo ── */
+.bs3d-shampoo {
+  width: 36px; height: 120px;
+  background: linear-gradient(135deg, #f8f6f2 0%, #eeece8 50%, #dedad4 100%);
+  border-radius: 18px 18px 8px 8px;
+  position: relative;
+  box-shadow: 4px 4px 14px rgba(0, 0, 0, 0.28);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.bs3d-shampoo-cap {
+  position: absolute;
+  top: -11px; left: 50%; transform: translateX(-50%);
+  width: 18px; height: 13px;
+  background: linear-gradient(180deg, #888, #555);
+  border-radius: 4px 4px 0 0;
+}
+.bs3d-shampoo-brand {
+  position: absolute;
+  top: 28px; left: 50%; transform: translateX(-50%);
+  font-size: 5.5px; font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #1a1a3e;
+  font-family: var(--font-body);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.bs3d-shampoo-emblem {
+  position: absolute;
+  top: 48px; left: 50%; transform: translateX(-50%);
+  width: 24px; height: 28px;
+  background: linear-gradient(180deg, rgba(200, 168, 76, 0.55), rgba(160, 130, 50, 0.35));
+  border-radius: 50% 50% 40% 40%;
+}
+
+/* ── Conditioner ── */
+.bs3d-conditioner {
+  width: 32px; height: 104px;
+  background: linear-gradient(135deg, #4db8c8 0%, #38a0b0 40%, #2a8090 100%);
+  border-radius: 16px 16px 8px 8px;
+  position: relative;
+  box-shadow: 4px 4px 14px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.bs3d-conditioner-cap {
+  position: absolute;
+  top: -10px; left: 50%; transform: translateX(-50%);
+  width: 16px; height: 12px;
+  background: linear-gradient(180deg, #c8a840, #a08020);
+  border-radius: 4px 4px 0 0;
+}
+.bs3d-conditioner-label1 {
+  position: absolute;
+  top: 20px; left: 50%; transform: translateX(-50%);
+  font-size: 5px; font-weight: 700;
+  letter-spacing: 0.12em; color: #fff;
+  font-family: var(--font-body);
+  white-space: nowrap; pointer-events: none;
+}
+.bs3d-conditioner-label2 {
+  position: absolute;
+  top: 30px; left: 50%; transform: translateX(-50%);
+  font-size: 5px; font-weight: 700;
+  letter-spacing: 0.12em; color: #ffe0a0;
+  font-family: var(--font-body);
+  white-space: nowrap; pointer-events: none;
+}
+
+/* ── Shelf platform ── */
+.bs3d-shelf {
+  position: absolute;
+  bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 88%; height: 44px;
+  background: linear-gradient(180deg, #f5f5f5 0%, #e8e8e8 60%, #d0d0d0 100%);
+  border-radius: 4px 4px 0 0;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* ── Metal frame posts ── */
+.bs3d-frame-left,
+.bs3d-frame-right {
+  position: absolute;
+  bottom: 0; width: 10px; height: 52px;
+  background: linear-gradient(90deg, #1a1a1a, #2d2d2d, #1a1a1a);
+  border-radius: 4px;
+  z-index: 11;
+}
+.bs3d-frame-left  { left: 6%; }
+.bs3d-frame-right { right: 6%; }
+
+/* ── Towel bar + towel ── */
+.bs3d-towel-bar {
+  position: absolute;
+  bottom: -22px; left: 50%; transform: translateX(-50%);
+  width: 82%; height: 6px;
+  background: linear-gradient(180deg, #1a1a1a, #333, #1a1a1a);
+  border-radius: 3px;
+  z-index: 11;
+}
+.bs3d-towel {
+  position: absolute;
+  bottom: -44px; left: 62%;
+  width: 54px; height: 28px;
+  background: linear-gradient(180deg, #7bc67e, #4fa85a);
+  border-radius: 2px 2px 4px 4px;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+  z-index: 10;
+}
+
+/* ── Ground shadow ── */
+.bs3d-shadow {
+  width: 90%; height: 18px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), transparent);
+  border-radius: 0 0 50% 50%;
+  margin: 0 auto;
+}
+
+/* ── Caption ── */
+.bs3d-caption {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  margin-top: 30px;
+}
+.bs3d-cap-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(201, 168, 76, 0.7);
+  font-family: var(--font-body);
+  margin-bottom: 8px;
+}
+.bs3d-cap-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.bs3d-cap-title em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.bs3d-cap-sub {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.42);
+  font-family: var(--font-body);
+  letter-spacing: 0.04em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 575px) {
+  .bs3d-scene { width: 320px; }
+  .bs3d-wall  { height: 200px; }
+  .bs3d-products { gap: 10px; }
+  .bs3d-shampoo  { width: 28px; height: 90px; }
+  .bs3d-conditioner { width: 26px; height: 80px; }
+  .bs3d-tube { width: 22px; height: 76px; }
+  .bs3d-wrap { min-height: 440px; }
+}

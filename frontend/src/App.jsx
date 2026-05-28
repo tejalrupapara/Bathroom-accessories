@@ -7,6 +7,7 @@ import CollectionPage from "./pages/CollectionPage";
 import QuotePage from "./pages/QuotePage";
 import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
 
 function App() {
   return (
@@ -14,11 +15,12 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/"           element={<HomePage />} />
-          <Route path="/collection" element={<CollectionPage />} />
-          <Route path="/quote"      element={<QuotePage />} />
-          <Route path="/contact"    element={<ContactPage />} />
-          <Route path="/about"      element={<AboutPage />} />
+          <Route path="/"                element={<HomePage />} />
+          <Route path="/collection"      element={<CollectionPage />} />
+          <Route path="/product/:id"     element={<ProductDetailPage />} />
+          <Route path="/quote"           element={<QuotePage />} />
+          <Route path="/contact"         element={<ContactPage />} />
+          <Route path="/about"           element={<AboutPage />} />
         </Routes>
         <FloatingButtons />
       </BrowserRouter>

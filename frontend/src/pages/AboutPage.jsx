@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import BathroomScene3D from "../components/BathroomScene";
 import "./AboutPage.css";
 
 const series = [
@@ -79,6 +80,8 @@ export default function AboutPage() {
         <div className="about-hero-orb orb-c" />
         <div className="container-xxl about-hero-inner">
           <div className="row align-items-center g-5">
+
+            {/* Left — text */}
             <div className="col-lg-6">
               <p className="cp-breadcrumb">Home / About Us</p>
               <span className="section-label">About Nexxora</span>
@@ -87,8 +90,8 @@ export default function AboutPage() {
                 <em className="about-hero-italic">Acrylic Bathware</em>
               </h1>
               <p className="about-hero-desc">
-                In a short span of time, <strong>NEXXORA</strong> has made its presence in the 
-                sanitary industry specializing in bathroom accessories — with stylish and functional 
+                In a short span of time, <strong>NEXXORA</strong> has made its presence in the
+                sanitary industry specializing in bathroom accessories — with stylish and functional
                 designs, high quality, and affordable prices for consumers.
               </p>
               <div className="d-flex flex-wrap gap-3 mt-4">
@@ -100,20 +103,14 @@ export default function AboutPage() {
                 </Link>
               </div>
             </div>
+
+            {/* Right — 3D animated bathroom scene */}
             <div className="col-lg-6 d-flex justify-content-center">
-              <div className="about-emblem-card">
-                <img src="/logo.png" alt="Nexxora Logo" className="aec-logo-img" />
-                <div className="aec-brand">NEXXORA</div>
-                <div className="aec-tagline">Precision Crafted Acrylic Bathware</div>
-                <div className="aec-divider"/>
-                <div className="aec-powered">Powered By</div>
-                <div className="aec-company">Greenvolt Enterprise</div>
-                <div className="aec-contact">
-                  <span>📞 +91 99986 64704</span>
-                  <span>✉️ greenvolt28@gmail.com</span>
-                </div>
+              <div style={{ width: "100%", maxWidth: 480 }}>
+                <BathroomScene3D />
               </div>
             </div>
+
           </div>
         </div>
         <div className="about-hero-wave">
@@ -137,7 +134,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ══ ABOUT US ══ */}
+      {/* ══ ABOUT US / STORY ══ */}
       <section className="about-story-section">
         <div className="container-xxl">
           <div className="row align-items-center g-5">
@@ -147,8 +144,8 @@ export default function AboutPage() {
                   <div className="asv-icon">◈</div>
                   <div className="asv-card-title">About Us</div>
                   <p>
-                    NEXXORA has made its presence in the sanitary industry specializing in 
-                    bathroom accessories. With stylish and functional designs, high quality 
+                    NEXXORA has made its presence in the sanitary industry specializing in
+                    bathroom accessories. With stylish and functional designs, high quality
                     and affordable prices for consumers.
                   </p>
                 </div>
@@ -156,7 +153,7 @@ export default function AboutPage() {
                   <div className="asv-icon text-gold">✦</div>
                   <div className="asv-card-title">Our Mission</div>
                   <p>
-                    Always give customers more than what they expect to get. 
+                    Always give customers more than what they expect to get.
                     Quality is not an act — it is a habit in Nexxora Bath Accessories.
                   </p>
                 </div>
@@ -170,20 +167,19 @@ export default function AboutPage() {
               <h2 className="section-heading">A Fabulous Range For Every Style</h2>
               <div className="gold-divider left"/>
               <p className="about-body-text mt-3">
-                A fabulous range of bathroom accessories with every possible style you can imagine! 
+                A fabulous range of bathroom accessories with every possible style you can imagine!
                 Whether you are looking for Nexxora Bath Accessories — we have a range for you!
               </p>
               <p className="about-body-text">
-                The culmination of superb products, passion for design, craftsmanship, and the 
-                finest quality materials, have resulted in a wonderful range of extraordinary and 
-                beautiful bathrooms for private homes & leading hotels.
+                The culmination of superb products, passion for design, craftsmanship, and the
+                finest quality materials, have resulted in a wonderful range of extraordinary and
+                beautiful bathrooms for private homes &amp; leading hotels.
               </p>
               <p className="about-body-text">
-                Nexxora is <strong>Powered by Greenvolt Enterprise</strong> — a company committed 
-                to delivering excellence in every product, from the first sketch to the final 
+                Nexxora is <strong>Powered by Greenvolt Enterprise</strong> — a company committed
+                to delivering excellence in every product, from the first sketch to the final
                 fitting on your wall.
               </p>
-
               <div className="about-values-grid mt-4">
                 {values.map((v, i) => (
                   <div key={i} className="about-value-card">
@@ -240,7 +236,10 @@ export default function AboutPage() {
         <div className="container-xxl am-inner">
           <div className="row align-items-center g-5">
             <div className="col-lg-5">
-              <span className="section-label" style={{color:"#fff",borderColor:"rgba(255,255,255,0.25)",background:"rgba(255,255,255,0.08)"}}>
+              <span
+                className="section-label"
+                style={{color:"#fff",borderColor:"rgba(255,255,255,0.25)",background:"rgba(255,255,255,0.08)"}}
+              >
                 Materials
               </span>
               <h2 className="section-heading" style={{color:"#fff"}}>
@@ -248,13 +247,12 @@ export default function AboutPage() {
               </h2>
               <div className="gold-divider left"/>
               <p style={{color:"rgba(255,255,255,0.6)",lineHeight:"1.75",marginTop:"1rem",fontSize:"0.95rem"}}>
-                Every Nexxora product uses premium high-grade acrylic sheets paired with 
-                precision-engineered metal brackets — available in multiple finish colours 
+                Every Nexxora product uses premium high-grade acrylic sheets paired with
+                precision-engineered metal brackets — available in multiple finish colours
                 to match any bathroom design.
               </p>
             </div>
             <div className="col-lg-7">
-              {/* Finishes */}
               <div className="am-section-title">3 Bracket Finishes</div>
               <div className="am-finishes">
                 {finishes.map(f => (
@@ -264,7 +262,6 @@ export default function AboutPage() {
                   </div>
                 ))}
               </div>
-              {/* Acrylics */}
               <div className="am-section-title mt-4">9 Acrylic Sheet Variants</div>
               <div className="am-acrylic-chips">
                 {acrylics.map(a => (
@@ -289,8 +286,8 @@ export default function AboutPage() {
                 <div className="acb-powered">Powered By</div>
                 <h2 className="acb-company">Greenvolt Enterprise</h2>
                 <p className="acb-desc">
-                  Greenvolt Enterprise is the driving force behind Nexxora, dedicated to bringing 
-                  world-class acrylic bathroom accessories to Indian homes and hotels. Our commitment 
+                  Greenvolt Enterprise is the driving force behind Nexxora, dedicated to bringing
+                  world-class acrylic bathroom accessories to Indian homes and hotels. Our commitment
                   to quality, innovation, and customer satisfaction is at the heart of everything we do.
                 </p>
               </div>
@@ -304,7 +301,8 @@ export default function AboutPage() {
                   </a>
                   <a href="mailto:greenvolt28@gmail.com" className="acb-contact-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                      <polyline points="22,6 12,13 2,6"/>
                     </svg>
                     greenvolt28@gmail.com
                   </a>
@@ -330,8 +328,11 @@ export default function AboutPage() {
           <div className="d-flex flex-wrap gap-3 justify-content-center">
             <Link to="/collection" className="btn btn-gold btn-lg px-5 py-3">Browse Collection</Link>
             <Link to="/contact"    className="btn btn-teal btn-lg px-5 py-3">Contact Us</Link>
-            <a href="/NEXXORA_CATALOGUE.pdf" download target="_blank" rel="noopener noreferrer"
-              className="btn btn-outline-gold btn-lg px-5 py-3">
+            <a
+              href="/NEXXORA_CATALOGUE.pdf"
+              download target="_blank" rel="noopener noreferrer"
+              className="btn btn-outline-gold btn-lg px-5 py-3"
+            >
               Download Catalogue
             </a>
           </div>

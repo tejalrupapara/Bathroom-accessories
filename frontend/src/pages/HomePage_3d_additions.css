@@ -1,0 +1,325 @@
+/* ══════════════════════════════════════════
+   3D EFFECTS — append to bottom of HomePage.css
+   ══════════════════════════════════════════ */
+
+/* ── Global 3D context ── */
+.tilt3d,
+.series-card-wrapper,
+.feature-card-wrapper,
+.finish-flip-wrapper,
+.cta-tilt-wrapper {
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+/* ── Shine overlay (shared) ── */
+.card-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.12) 0%,
+    rgba(255,255,255,0) 60%
+  );
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+.series-card-wrapper:hover .card-shine,
+.feature-card-wrapper:hover .card-shine,
+.cta-tilt-wrapper:hover .card-shine {
+  opacity: 1;
+}
+
+/* ── HERO VISUAL 3D ── */
+.hero-visual-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.12s ease-out, box-shadow 0.3s ease;
+  will-change: transform;
+  cursor: crosshair;
+}
+.hero-visual-3d:hover {
+  box-shadow:
+    0 40px 100px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(201,168,76,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+/* Layered depth planes inside hero card */
+.hv-depth-layer {
+  position: absolute;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.hv-depth-1 {
+  inset: -1px;
+  border: 1px solid rgba(201,168,76,0.15);
+  transform: translateZ(-8px);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.hv-depth-2 {
+  inset: -2px;
+  border: 1px solid rgba(201,168,76,0.07);
+  transform: translateZ(-16px);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.05s;
+}
+.hero-visual-3d:hover .hv-depth-1,
+.hero-visual-3d:hover .hv-depth-2 {
+  opacity: 1;
+}
+
+/* Chips & finishes lift on card hover */
+.hv-chip-3d {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transform: translateZ(0px);
+}
+.hero-visual-3d:hover .hv-chip-3d {
+  transform: translateZ(12px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+.hv-finish-3d {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transform: translateZ(0px);
+}
+.hero-visual-3d:hover .hv-finish-3d {
+  transform: translateZ(18px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+}
+
+/* ── SERIES CARDS 3D ── */
+.series-card-wrapper {
+  height: 100%;
+  border-radius: var(--radius-lg);
+}
+.series-card-3d {
+  transform-style: preserve-3d;
+  position: relative;
+  overflow: hidden;
+}
+/* Accent edge glow on hover */
+.series-card-3d::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1.5px var(--acc, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+.series-card-wrapper:hover .series-card-3d::after {
+  opacity: 1;
+}
+.series-card-wrapper:hover .sc-number {
+  transform: translateZ(20px) scale(1.1);
+  transition: transform 0.3s ease;
+}
+.sc-number {
+  transition: transform 0.3s ease;
+}
+.series-card-wrapper:hover .sc-arrow {
+  transform: translateX(6px) translateZ(10px);
+}
+.sc-arrow {
+  transition: transform 0.25s ease;
+}
+
+/* ── FEATURE CARDS 3D ── */
+.feature-card-wrapper {
+  height: 100%;
+  border-radius: var(--radius-md);
+}
+.feature-card-3d {
+  position: relative;
+  transform-style: preserve-3d;
+}
+.feature-card-3d .fc-icon {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+.feature-card-wrapper:hover .fc-icon {
+  transform: translateZ(24px) scale(1.15);
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(201,168,76,0.4);
+}
+.feature-card-3d .fc-title {
+  transition: transform 0.3s ease 0.05s;
+}
+.feature-card-wrapper:hover .fc-title {
+  transform: translateZ(14px);
+}
+
+/* ── FINISH CARDS — 3D FLIP ── */
+.finish-flip-wrapper {
+  perspective: 1000px;
+  height: 240px;
+}
+.finish-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+.finish-flip-wrapper:hover .finish-flip-inner {
+  transform: rotateY(180deg);
+}
+.finish-card-front,
+.finish-card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+/* Front */
+.finish-card-front {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: border-color 0.3s ease;
+}
+.finish-hint {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.06em;
+  margin-top: 1rem;
+  text-transform: uppercase;
+}
+/* Back */
+.finish-card-back {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  transform: rotateY(180deg);
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+}
+.finish-back-orb {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.18;
+  filter: blur(50px);
+  pointer-events: none;
+}
+.finish-back-content {
+  position: relative;
+  z-index: 1;
+}
+.finish-back-cta {
+  display: inline-block;
+  margin-top: 1.25rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(201,168,76,0.35);
+  padding: 7px 18px;
+  border-radius: 20px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.finish-back-cta:hover {
+  background: rgba(201,168,76,0.15);
+  color: var(--gold-light, #e8c96a);
+}
+
+/* ── CTA BOX 3D ── */
+.cta-tilt-wrapper {
+  border-radius: var(--radius-xl);
+}
+.cta-box-3d {
+  transform-style: preserve-3d;
+  position: relative;
+}
+.cta-glow-2 {
+  position: absolute;
+  bottom: -80px;
+  left: -80px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(13,107,107,0.12);
+  filter: blur(70px);
+  pointer-events: none;
+}
+.cta-tilt-wrapper:hover .cta-box {
+  box-shadow:
+    0 32px 80px rgba(0,0,0,0.4),
+    0 0 0 1px rgba(201,168,76,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* ── BUTTONS 3D ── */
+.btn-3d {
+  transform: translateY(0) translateZ(0);
+  transition: transform 0.18s ease, box-shadow 0.18s ease !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  position: relative;
+}
+.btn-3d:hover {
+  transform: translateY(-3px) translateZ(0);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.3) !important;
+}
+.btn-3d:active {
+  transform: translateY(0px) translateZ(0);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+}
+
+/* ── STAT COUNTER 3D pop ── */
+.stat-3d {
+  transition: transform 0.25s ease;
+  cursor: default;
+}
+.stat-3d:hover {
+  transform: translateY(-4px) scale(1.08);
+}
+.stat-3d:hover .hero-stat-num {
+  text-shadow: 0 0 30px rgba(201,168,76,0.35);
+}
+
+/* ── Disable heavy 3D on mobile (performance) ── */
+@media (max-width: 767px) {
+  .hero-visual-3d,
+  .tilt3d,
+  .series-card-wrapper,
+  .feature-card-wrapper,
+  .cta-tilt-wrapper {
+    transform: none !important;
+    transition: box-shadow 0.3s ease !important;
+  }
+  .finish-flip-wrapper {
+    height: auto;
+    perspective: none;
+  }
+  .finish-flip-inner {
+    transform: none !important;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .finish-card-front {
+    position: relative;
+    inset: auto;
+    backface-visibility: visible;
+  }
+  .finish-card-back {
+    display: none;
+  }
+  .finish-hint { display: none; }
+}
