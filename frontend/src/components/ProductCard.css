@@ -118,3 +118,138 @@
 .pc-quote-btn:hover { background: var(--gold); color: var(--dark); border-color: var(--gold); }
 .pc-quote-btn.added { background: #ecfdf5; color: #065f46; border-color: #6ee7b7; }
 .pc-quote-btn.added:hover { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
+
+
+/* ═══════════════════════════════════════
+   SIMPLE 3D ANIMATIONS
+═══════════════════════════════════════ */
+
+/* ── Staggered entry animation ── */
+.pc-card {
+  animation: pcCardIn 0.55s cubic-bezier(0.4,0,0.2,1) both;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+@keyframes pcCardIn {
+  from { opacity: 0; transform: translateY(32px) scale(0.94); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+/* Stagger delay by position */
+.pc-card:nth-child(1)  { animation-delay: 0.04s; }
+.pc-card:nth-child(2)  { animation-delay: 0.08s; }
+.pc-card:nth-child(3)  { animation-delay: 0.12s; }
+.pc-card:nth-child(4)  { animation-delay: 0.16s; }
+.pc-card:nth-child(5)  { animation-delay: 0.20s; }
+.pc-card:nth-child(6)  { animation-delay: 0.24s; }
+.pc-card:nth-child(7)  { animation-delay: 0.28s; }
+.pc-card:nth-child(8)  { animation-delay: 0.32s; }
+.pc-card:nth-child(9)  { animation-delay: 0.36s; }
+.pc-card:nth-child(10) { animation-delay: 0.40s; }
+.pc-card:nth-child(11) { animation-delay: 0.44s; }
+.pc-card:nth-child(12) { animation-delay: 0.48s; }
+
+/* ── 3D hover lift ── */
+.pc-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow:
+    0 24px 48px rgba(0,0,0,0.14),
+    0 8px 16px rgba(201,168,76,0.12),
+    0 0 0 1px rgba(201,168,76,0.2);
+}
+
+/* ── Shimmer sweep on image hover ── */
+.pc-img::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255,255,255,0.18) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  background-position: -100% 0;
+  transition: background-position 0s;
+  pointer-events: none;
+  z-index: 3;
+}
+.pc-card:hover .pc-img::after {
+  background-position: 200% 0;
+  transition: background-position 0.6s ease;
+}
+
+/* ── Badge bounce on load ── */
+.pc-badge {
+  animation: pcBadgeBounce 0.6s 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes pcBadgeBounce {
+  from { transform: scale(0) rotate(-8deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0deg);  opacity: 1; }
+}
+
+/* ── Price slide up ── */
+.pc-price {
+  animation: pcPriceIn 0.4s 0.3s cubic-bezier(0.4,0,0.2,1) both;
+}
+@keyframes pcPriceIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── View Details button shine on hover ── */
+.pc-view-btn {
+  position: relative; overflow: hidden;
+}
+.pc-view-btn::after {
+  content: '';
+  position: absolute; top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: skewX(-20deg);
+  transition: left 0s;
+}
+.pc-view-btn:hover::after {
+  left: 150%;
+  transition: left 0.5s ease;
+}
+
+/* ── Quote button spin on add ── */
+.pc-quote-btn {
+  transition: all 0.22s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.pc-quote-btn:active {
+  transform: scale(0.85) rotate(8deg);
+}
+
+/* ── Series badge pop on hover ── */
+.pc-series {
+  transition: all 0.22s ease;
+}
+.pc-card:hover .pc-series {
+  background: rgba(201,168,76,0.15);
+  color: var(--gold) !important;
+  transform: scale(1.05);
+}
+
+/* ── Card border glow pulse on hover ── */
+.pc-card::after {
+  content: '';
+  position: absolute; inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--accent,var(--teal)), var(--gold), var(--accent,var(--teal)));
+  background-size: 200% 200%;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  animation: pcBorderGlow 3s linear infinite paused;
+}
+.pc-card:hover::after {
+  opacity: 0.5;
+  animation-play-state: running;
+}
+@keyframes pcBorderGlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

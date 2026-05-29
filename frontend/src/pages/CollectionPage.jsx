@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { products, categories } from "../data/products";
 import ProductCard from "../components/ProductCard";
 import "./CollectionPage.css";
@@ -7,6 +7,7 @@ export default function CollectionPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery]       = useState("");
   const [sortBy, setSortBy]                 = useState("default");
+  const spotlightRef = useRef(null);
 
   const filtered = useMemo(() => {
     let list = products.filter(p => {
@@ -21,12 +22,33 @@ export default function CollectionPage() {
     return list;
   }, [activeCategory, searchQuery, sortBy]);
 
+  /* ── Spotlight follows mouse on header ── */
+  useEffect(() => {
+    const header = document.querySelector(".cp-header");
+    if (!header) return;
+    function onMove(e) {
+      const rect = header.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      header.style.setProperty("--sx", `${x}px`);
+      header.style.setProperty("--sy", `${y}px`);
+    }
+    header.addEventListener("mousemove", onMove);
+    return () => header.removeEventListener("mousemove", onMove);
+  }, []);
+
   return (
     <div className="collection-page">
 
       {/* Page header */}
       <div className="cp-header">
         <div className="cp-header-glow"/>
+        {/* Floating particles */}
+        <div className="cp-particles">
+          {[...Array(8)].map((_,i) => (
+            <div key={i} className={`cp-particle cp-p${i+1}`}/>
+          ))}
+        </div>
         <div className="container-xxl cp-header-inner">
           <p className="cp-breadcrumb">Home / Collection</p>
           <h1 className="cp-title">Our Collection</h1>
@@ -37,7 +59,7 @@ export default function CollectionPage() {
       <div className="container-xxl cp-body">
         <div className="row g-0">
 
-          {/* ── Sidebar ── */}
+          {/* Sidebar */}
           <div className="col-lg-3 col-xl-2">
             <aside className="cp-sidebar">
               <h2 className="cp-sidebar-title">Series</h2>
@@ -60,7 +82,7 @@ export default function CollectionPage() {
             </aside>
           </div>
 
-          {/* ── Main ── */}
+          {/* Main */}
           <div className="col-lg-9 col-xl-10">
             <div className="cp-main">
 
@@ -81,16 +103,14 @@ export default function CollectionPage() {
                     <button className="cp-search-clear" onClick={()=>setSearchQuery("")}>✕</button>
                   )}
                 </div>
-
                 <select className="cp-sort" value={sortBy} onChange={e=>setSortBy(e.target.value)}>
                   <option value="default">Sort: Default</option>
                   <option value="name">Name A–Z</option>
                   <option value="price-asc">Price: Low to High</option>
                   <option value="price-desc">Price: High to Low</option>
                 </select>
-
                 <div className="cp-result-count">
-                  <span className="cp-count-num">{filtered.length}</span> products
+                  <span className="cp-count-num" key={filtered.length}>{filtered.length}</span> products
                 </div>
               </div>
 
@@ -100,7 +120,8 @@ export default function CollectionPage() {
                   <div className="cp-empty-icon">🔎</div>
                   <h3>No products found</h3>
                   <p>Try a different category or search term</p>
-                  <button className="btn btn-teal px-4 py-2 mt-3" onClick={()=>{setSearchQuery("");setActiveCategory("All");}}>
+                  <button className="btn btn-teal px-4 py-2 mt-3"
+                    onClick={()=>{setSearchQuery("");setActiveCategory("All");}}>
                     Reset Filters
                   </button>
                 </div>

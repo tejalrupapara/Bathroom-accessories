@@ -1,9 +1,106 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./ContactPage.css";
+
+const accessories = [
+  {
+    id: "faucet",
+    name: "Matte Black Faucet",
+    desc: "Ray-traced reflection, electroplated matte black finish, smooth water flow aerator, and ultra-durable ceramic cartridge.",
+    x: 48, y: 68,
+    price: "Premium",
+    spec: "Anti-corrosion, solid brass core, aerated flow"
+  },
+  {
+    id: "towel",
+    name: "Golden Towel Holder",
+    desc: "Stunning 24k gold vacuum plating brackets combined with highly-polished crystal acrylic rod for towels.",
+    x: 22, y: 35,
+    price: "Luxury",
+    spec: "Scratch-resistant PVD coating, heavy-duty mount"
+  },
+  {
+    id: "soap",
+    name: "Soap Dispenser",
+    desc: "Countertop luxury soap pump with a crystal clear marble acrylic body and high-precision golden spring pump.",
+    x: 34, y: 56,
+    price: "Designer",
+    spec: "350ml capacity, drip-free nozzle, heavy-base stability"
+  },
+  {
+    id: "shower",
+    name: "Premium Shower Set",
+    desc: "Cinematic overhead rain shower system with soft silicone nozzles, global illumination aesthetics, and matte black body.",
+    x: 76, y: 24,
+    price: "Elite",
+    spec: "Air-injection rain flow, multi-mode spray"
+  },
+  {
+    id: "mirror",
+    name: "Mirror Cabinet",
+    desc: "Glossy intelligent mirror cabinet with soft ambient LED backlighting, integrated defogger, and concealed glass shelves.",
+    x: 52, y: 26,
+    price: "Signature",
+    spec: "Smart touch control, 3-color light adjustment"
+  },
+  {
+    id: "sink",
+    name: "Ceramic Sink Basin",
+    desc: "Vessel basin with smooth glossy marble texture, dirt-resistant nano glazing, and elegant modern organic curves.",
+    x: 41, y: 80,
+    price: "Imperial",
+    spec: "Stain-resistant glaze, seamless drainage integration"
+  }
+];
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name:"", email:"", phone:"", city:"", subject:"", message:"" });
   const [submitted, setSubmitted] = useState(false);
+  const [activeAcc, setActiveAcc] = useState(accessories[0]);
+  const showcaseRef = useRef(null);
+
+  useEffect(() => {
+    const showcase = showcaseRef.current;
+    if (!showcase) return;
+
+    let raf;
+    let targetX = 0, targetY = 0;
+    let currentX = 0, currentY = 0;
+
+    const handleMouseMove = (e) => {
+      const rect = showcase.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      targetX = (x / rect.width) * 2 - 1;
+      targetY = (y / rect.height) * 2 - 1;
+    };
+
+    const handleMouseLeave = () => {
+      targetX = 0;
+      targetY = 0;
+    };
+
+    const tick = () => {
+      currentX += (targetX - currentX) * 0.08;
+      currentY += (targetY - currentY) * 0.08;
+      
+      showcase.style.setProperty("--tilt-x", `${-currentY * 14}deg`);
+      showcase.style.setProperty("--tilt-y", `${currentX * 14}deg`);
+      showcase.style.setProperty("--light-x", `${(currentX + 1) * 50}%`);
+      showcase.style.setProperty("--light-y", `${(currentY + 1) * 50}%`);
+      
+      raf = requestAnimationFrame(tick);
+    };
+
+    showcase.addEventListener("mousemove", handleMouseMove);
+    showcase.addEventListener("mouseleave", handleMouseLeave);
+    raf = requestAnimationFrame(tick);
+
+    return () => {
+      showcase.removeEventListener("mousemove", handleMouseMove);
+      showcase.removeEventListener("mouseleave", handleMouseLeave);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
 
   function handleChange(e) {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -65,12 +162,80 @@ export default function ContactPage() {
       <div className="contact-header">
         <div className="contact-header-glow" />
         <div className="container-xxl contact-header-inner">
-          <p className="cp-breadcrumb">Home / Contact Us</p>
-          <img src="/logo.png" alt="Nexxora" className="contact-header-logo" />
-          <h1 className="contact-title">Get In Touch</h1>
-          <p className="contact-subtitle">
-            Have questions or need assistance? Reach out via phone, WhatsApp, or email — we're here to help.
-          </p>
+          <div className="row align-items-center g-5">
+            <div className="col-lg-6 contact-header-text">
+              <p className="cp-breadcrumb">Home / Contact Us</p>
+              <img src="/logo.png" alt="Nexxora" className="contact-header-logo" />
+              <h1 className="contact-title">Get In Touch</h1>
+              <p className="contact-subtitle">
+                Have questions or need assistance? Reach out via phone, WhatsApp, or email — we're here to help.
+              </p>
+              
+              {/* Accessory Quick Specs Pill */}
+              <div className="contact-acc-pill">
+                <span className="cp-pill-badge">Commercial Showcase</span>
+                <span className="cp-pill-text">Hover or click hotspots on the 3D interior showcase to view premium accessory details.</span>
+              </div>
+            </div>
+            
+            <div className="col-lg-6 d-flex justify-content-center">
+              <div className="contact-3d-wrap">
+                <div ref={showcaseRef} className="contact-3d-showcase">
+                  {/* Backdrop texture */}
+                  <div className="c3d-backdrop" />
+                  
+                  {/* Dynamic light shine reflection */}
+                  <div className="c3d-reflection" />
+                  
+                  {/* Slow motion water droplets overlay */}
+                  <div className="c3d-water-layer">
+                    <span className="c3d-drop drop-1" />
+                    <span className="c3d-drop drop-2" />
+                    <span className="c3d-drop drop-3" />
+                    <span className="c3d-drop drop-4" />
+                    <span className="c3d-drop drop-5" />
+                    <span className="c3d-drop drop-6" />
+                  </div>
+                  
+                  {/* 3D Depth Layer Outline */}
+                  <div className="c3d-depth-frame" />
+                  
+                  {/* Hotspots */}
+                  {accessories.map(acc => (
+                    <button
+                      key={acc.id}
+                      className={`c3d-hotspot hs-${acc.id} ${activeAcc.id === acc.id ? "active" : ""}`}
+                      style={{ top: `${acc.y}%`, left: `${acc.x}%` }}
+                      onClick={() => setActiveAcc(acc)}
+                      onMouseEnter={() => setActiveAcc(acc)}
+                      aria-label={`Highlight ${acc.name}`}
+                    >
+                      <span className="c3d-hotspot-pulse" />
+                      <span className="c3d-hotspot-dot">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                          <circle cx="12" cy="12" r="10" />
+                        </svg>
+                      </span>
+                    </button>
+                  ))}
+                  
+                  {/* Active details popup banner (inside 3D space) */}
+                  <div className="c3d-details-card">
+                    <div className="c3d-details-header">
+                      <span className="c3d-details-series">{activeAcc.spec}</span>
+                      <span className="c3d-details-badge">{activeAcc.price} Selection</span>
+                    </div>
+                    <h3 className="c3d-details-title">{activeAcc.name}</h3>
+                    <p className="c3d-details-desc">{activeAcc.desc}</p>
+                    <div className="c3d-details-footer">
+                      <span className="c3d-tag">8K Octane Quality</span>
+                      <span className="c3d-tag">PVD / Matte Brass</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -246,7 +411,7 @@ export default function ContactPage() {
       </section>
 
       {/* ── Newsletter ── */}
-      <section className="newsletter-section">
+      {/* <section className="newsletter-section">
         <div className="container-xxl">
           <div className="newsletter-box">
             <div className="nl-glow" />
@@ -265,7 +430,7 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
     </div>
   );

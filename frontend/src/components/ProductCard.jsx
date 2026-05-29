@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useQuote } from "../context/QuoteContext";
 import "./ProductCard.css";
@@ -11,11 +12,41 @@ export default function ProductCard({ product }) {
   const { addToQuote, removeFromQuote, isInQuote } = useQuote();
   const added  = isInQuote(product.id);
   const accent = seriesColors[product.category] || "#0d6b6b";
+  const cardRef = useRef(null);
+
+  /* ── 3D tilt on mouse move ── */
+  function handleMouseMove(e) {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width  / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -7;  // max 7deg
+    const rotateY = ((x - centerX) / centerX) *  7;
+    card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.02)`;
+  }
+
+  function handleMouseLeave() {
+    const card = cardRef.current;
+    if (!card) return;
+    card.style.transform = "";
+    card.style.transition = "transform 0.5s cubic-bezier(0.4,0,0.2,1), box-shadow 0.5s ease, border-color 0.3s ease";
+    setTimeout(() => {
+      if (card) card.style.transition = "";
+    }, 500);
+  }
 
   return (
-    <div className="pc-card" style={{"--accent": accent}}>
-
-      {/* Clicking the image goes to product detail page */}
+    <div
+      className="pc-card"
+      style={{"--accent": accent}}
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {/* Image */}
       <Link to={`/product/${product.id}`} className="pc-img-link">
         <div className="pc-img">
           {product.image ? (
@@ -56,8 +87,6 @@ export default function ProductCard({ product }) {
         {product.price > 0 && (
           <div className="pc-price">₹{product.price.toLocaleString("en-IN")}</div>
         )}
-
-        {/* Two buttons */}
         <div className="pc-btn-row">
           <Link to={`/product/${product.id}`} className="pc-view-btn">
             View Details
