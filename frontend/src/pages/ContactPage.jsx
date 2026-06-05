@@ -56,6 +56,8 @@ export default function ContactPage() {
   const [formData, setFormData] = useState({ name:"", email:"", phone:"", city:"", subject:"", message:"" });
   const [submitted, setSubmitted] = useState(false);
   const [activeAcc, setActiveAcc] = useState(accessories[0]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const showcaseRef = useRef(null);
 
   useEffect(() => {
@@ -106,9 +108,39 @@ export default function ContactPage() {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/contacts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          city: formData.city,
+          subject: formData.subject,
+          message: formData.message,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || (data.errors && data.errors[0]?.message) || 'Failed to send message.');
+      }
+
+      setSubmitted(true);
+      setFormData({ name: "", email: "", phone: "", city: "", subject: "", message: "" });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   const contactCards = [
@@ -119,7 +151,7 @@ export default function ContactPage() {
         </svg>
       ),
       title: "Our Office",
-      lines: ["Greenvolt Enterprise", "Ahmedabad, Gujarat", "India"],
+      lines: ["Greenvolt Enterprise", "Rajkot-360022, Gujarat", "India"],
     },
     {
       icon: (
@@ -151,7 +183,7 @@ export default function ContactPage() {
         </svg>
       ),
       title: "Working Hours",
-      lines: ["Mon – Sat: 9:00 AM – 7:00 PM", "Sunday: By Appointment"],
+      lines: ["Mon – Sat: 8:00 AM – 7:00 PM", "Sunday: By Appointment"],
     },
   ];
 
@@ -294,6 +326,11 @@ export default function ContactPage() {
                   </div>
                 ) : (
                   <form className="cfc-form" onSubmit={handleSubmit}>
+                    {error && (
+                      <div className="cp-error-alert" style={{ color: '#ff4d4d', backgroundColor: 'rgba(255, 77, 77, 0.08)', padding: '12px', borderRadius: '6px', marginBottom: '15px', fontSize: '14px', border: '1px solid rgba(255, 77, 77, 0.15)' }}>
+                        ⚠️ {error}
+                      </div>
+                    )}
                     <div className="row g-3">
                       <div className="col-sm-6">
                         <div className="form-group">
@@ -309,8 +346,8 @@ export default function ContactPage() {
                       </div>
                       <div className="col-sm-6">
                         <div className="form-group">
-                          <label>Email Address</label>
-                          <input name="email" type="email" placeholder="your@email.com" value={formData.email} onChange={handleChange} />
+                          <label>Email Address *</label>
+                          <input name="email" type="email" placeholder="your@email.com" value={formData.email} onChange={handleChange} required />
                         </div>
                       </div>
                       <div className="col-sm-6">
@@ -339,11 +376,13 @@ export default function ContactPage() {
                         </div>
                       </div>
                       <div className="col-12">
-                        <button type="submit" className="btn btn-gold w-100 py-3">
-                          Send Message
-                          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                          </svg>
+                        <button type="submit" className="btn btn-gold w-100 py-3" disabled={loading}>
+                          {loading ? "Sending Message..." : "Send Message"}
+                          {!loading && (
+                            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                              <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                          )}
                         </button>
                       </div>
                     </div>
