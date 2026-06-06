@@ -1,0 +1,698 @@
+{
+  "info": {
+    "_postman_id": "e0a133f9-67c8-47bc-8a4a-71bfbf88665f",
+    "name": "NEXXORA Accessories Backend API",
+    "description": "Importable Postman Collection mapping all public catalog routes, validations, newsletter subscribe calls, and protected admin endpoints for NEXXORA Premium accessories catalog.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "General & Health",
+      "item": [
+        {
+          "name": "Base Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Verifies that the server service is live."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Public Catalogue Operations",
+      "item": [
+        {
+          "name": "Get All Products (Paginated & Filtered)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products?category=Sky&sort=price_asc&page=1&limit=12",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "Sky",
+                  "description": "Filter by Sky, Prism, Lume, Vector, Nova, Neo, Prime"
+                },
+                {
+                  "key": "sort",
+                  "value": "price_asc",
+                  "description": "newest, price_asc, price_desc, name_asc, name_desc"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "12"
+                },
+                {
+                  "key": "search",
+                  "value": "Soap",
+                  "disabled": true,
+                  "description": "Search keyword"
+                }
+              ]
+            },
+            "description": "Public catalog fetch with active parameters."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product by ID / Code",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/SAA-15",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "SAA-15"
+              ]
+            },
+            "description": "Retrieve product accessory details by custom product code (e.g. SAA-15) or Mongo ID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Public Form Submissions",
+      "item": [
+        {
+          "name": "Submit Quote Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Amit Sharma\",\n  \"phone\": \"+91 99988 77766\",\n  \"email\": \"amit.sharma@example.com\",\n  \"company\": \"Sharma Hotels & Suites\",\n  \"message\": \"Interested in high-quality items for deluxe bathrooms.\",\n  \"selectedProducts\": [\n    {\n      \"id\": \"SAA-1\",\n      \"name\": \"Single Soap Dish\",\n      \"category\": \"Sky\",\n      \"series\": \"Sky Series\",\n      \"price\": 745\n    },\n    {\n      \"id\": \"SAA-15\",\n      \"name\": \"Towel Rack Rod\",\n      \"category\": \"Sky\",\n      \"series\": \"Sky Series\",\n      \"price\": 2715\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/quotes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "quotes"
+              ]
+            },
+            "description": "Creates quote request record and triggers professional Nodemailer notifications to admin."
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Contact Inquiry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ketan Patel\",\n  \"email\": \"ketan@example.com\",\n  \"phone\": \"+91 98980 98980\",\n  \"subject\": \"Bulk supply options for showroom display\",\n  \"message\": \"We would like to request bulk catalogue pricelist and understand local dealership procedures in Gujarat.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/contacts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contacts"
+              ]
+            },
+            "description": "Records contact form feedback and dispatches email notifications."
+          },
+          "response": []
+        },
+        {
+          "name": "Subscribe to Newsletter",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"sub.reader@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/newsletter/subscribe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "newsletter",
+                "subscribe"
+              ]
+            },
+            "description": "Subscribes user to news alerts. Blocks duplicate email addresses."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Security & Session",
+      "item": [
+        {
+          "name": "Admin Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Automatically bind auth token to local Postman session variables",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.token) {",
+                  "    pm.environment.set(\"authToken\", jsonData.token);",
+                  "    console.log(\"Authorization bearer token set automatically to {{authToken}}\");",
+                  "}"
+                ],
+                "type": "javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"adminpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Logs in user using administrative username and password, returning 30-day session token."
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"adminpassword123\",\n  \"newPassword\": \"NewSecurePass789!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/change-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "change-password"
+              ]
+            },
+            "description": "Allows logged-in admins to modify login password hash."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Counters",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dashboard",
+                "stats"
+              ]
+            },
+            "description": "Returns counts for Total Products, Total Quotes, Total inquiries, and Total Subscribers alongside recent feeds."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Product CRUD",
+      "item": [
+        {
+          "name": "Create Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"SAA-16\",\n  \"name\": \"Multi Soap Dish Rack\",\n  \"category\": \"Sky\",\n  \"series\": \"Sky Series\",\n  \"badge\": \"new\",\n  \"description\": \"Thick wall plate supporting triple dark ceramic soap holders.\",\n  \"image\": \"/products/SAA-16.jpg\",\n  \"price\": 1950,\n  \"finishes\": [\"Black Matte\", \"Rose Gold\"],\n  \"acrylicVariants\": [\"Dark Acrylic\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            },
+            "description": "Registers new bath accessory product code inside database catalogue."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 2150,\n  \"badge\": \"hot\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/SAA-16",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "SAA-16"
+              ]
+            },
+            "description": "Updates fields of an existing product."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/SAA-16",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "SAA-16"
+              ]
+            },
+            "description": "Wipes product entry from catalog."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Quotes Management",
+      "item": [
+        {
+          "name": "Get All Quote Requests",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/quotes?page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "quotes"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Lists submitted catalog quotes."
+          },
+          "response": []
+        },
+        {
+          "name": "Toggle Quote Contacted Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/quotes/60c72b2f9b1d8b2345678911/contacted",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "quotes",
+                "60c72b2f9b1d8b2345678911",
+                "contacted"
+              ]
+            },
+            "description": "Toggles contacted checkbox status."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Quote Request",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/quotes/60c72b2f9b1d8b2345678911",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "quotes",
+                "60c72b2f9b1d8b2345678911"
+              ]
+            },
+            "description": "Removes a quote request permanently."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Contact Inquiry Management",
+      "item": [
+        {
+          "name": "Get All Contact Inquiries",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/contacts?page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contacts"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Lists customer feedback entries."
+          },
+          "response": []
+        },
+        {
+          "name": "Toggle Inquiry Resolution",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/contacts/60c72b2f9b1d8b2345678912/resolve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contacts",
+                "60c72b2f9b1d8b2345678912",
+                "resolve"
+              ]
+            },
+            "description": "Toggles contact resolved status."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Newsletter Management",
+      "item": [
+        {
+          "name": "Get Subscribers List",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/newsletter/subscribers?page=1&limit=50",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "newsletter",
+                "subscribers"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Lists all subscribers."
+          },
+          "response": []
+        },
+        {
+          "name": "Export Subscribers to CSV Sheet",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{authToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/newsletter/export",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "newsletter",
+                "export"
+              ]
+            },
+            "description": "Generates and downloads a clean CSV file named nexxora_subscribers.csv."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "YOUR_BEARER_TOKEN_HERE",
+      "type": "string"
+    }
+  ]
+}
