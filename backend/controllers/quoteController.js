@@ -1,5 +1,7 @@
 const QuoteRequest = require('../models/QuoteRequest');
 const transporter = require('../config/mail');
+const { sendEmail } = require('../services/emailservice');
+
 const { sendQuoteNotification } = require('../services/whatsappService');
 
 /**
