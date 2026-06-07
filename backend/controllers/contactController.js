@@ -81,7 +81,7 @@ const submitInquiry = async (req, res, next) => {
       console.log('Nodemailer successfully dispatched Contact Us email notification.');
     } catch (emailError) {
       // Gracefully log email failure but continue processing WhatsApp and response
-      console.error('Nodemailer failed to dispatch Contact Us email alert:', emailError.message);
+      console.error('Nodemailer failed to dispatch Contact Us email alert:', emailError);
     }
 
     // 3. Stage 3: WhatsApp Alert (Twilio - Fail-safe)
