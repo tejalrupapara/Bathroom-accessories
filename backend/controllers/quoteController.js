@@ -113,11 +113,15 @@ const submitQuote = async (req, res, next) => {
           </div>
         `
       };
-      await transporter.sendMail(mailOptions);
-      console.log('Nodemailer successfully dispatched Quote Request email notification.');
-    } catch (emailError) {
+      await sendEmail({
+  subject: mailOptions.subject,
+  html: mailOptions.html,
+  replyTo: email,
+});
+
+console.log("Resend successfully dispatched Quote Request email notification.");    } catch (emailError) {
       // Gracefully log email failure but continue processing WhatsApp and response
-      console.error('Nodemailer failed to dispatch Quote Request email alert:', emailError);
+      console.error('Nodemailer failed to dispatch Quote Request email alert:', emailError.message);
     }
 
     // 3. Stage 3: WhatsApp Alert (Twilio - Fail-safe)
