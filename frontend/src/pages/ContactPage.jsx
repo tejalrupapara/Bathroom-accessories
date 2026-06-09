@@ -114,7 +114,7 @@ export default function ContactPage() {
     setError(null);
 
     try {
-      const response = await fetch('/api/contacts', {
+      const response = await fetch('https://bathroom-accessories.onrender.com/api/contacts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
