@@ -31,7 +31,7 @@ export default function QuotePage() {
     setError(null);
 
     try {
-      const response = await fetch('https://bathroom-accessories.onrender.com/api/quotes', {
+      const response = await fetch('/api/quotes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -183,4 +183,3 @@ export default function QuotePage() {
     </div>
   );
 }
-
