@@ -1,6 +1,5 @@
 const ContactInquiry = require('../models/ContactInquiry');
 const transporter = require('../config/mail');
-const { sendEmail } = require('../services/emailservice');
 const { sendContactNotification } = require('../services/whatsappService');
 
 /**
@@ -78,13 +77,8 @@ const submitInquiry = async (req, res, next) => {
           </div>
         `
       };
-     await sendEmail({
-  subject: mailOptions.subject,
-  html: mailOptions.html,
-  replyTo: email,
-});
-
-console.log("Resend successfully dispatched Contact Us email notification.");
+      await transporter.sendMail(mailOptions);
+      console.log("Nodemailer successfully dispatched Contact Us email notification.");
 } catch (emailError) {
       // Gracefully log email failure but continue processing WhatsApp and response
       console.error('Nodemailer failed to dispatch Contact Us email alert:', emailError);

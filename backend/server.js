@@ -40,13 +40,6 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-app.get('/api/test', (req, res) => {
-  res.json({
-    success: true,
-    message: 'TEST ROUTE WORKING'
-  });
-});
-
 // Mounting MVC Routers
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);

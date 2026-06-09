@@ -1,6 +1,5 @@
 const QuoteRequest = require('../models/QuoteRequest');
 const transporter = require('../config/mail');
-const { sendEmail } = require('../services/emailservice');
 
 const { sendQuoteNotification } = require('../services/whatsappService');
 
@@ -115,13 +114,8 @@ const submitQuote = async (req, res, next) => {
           </div>
         `
       };
-      await sendEmail({
-  subject: mailOptions.subject,
-  html: mailOptions.html,
-  replyTo: email,
-});
-
-console.log("Resend successfully dispatched Quote Request email notification.");    } catch (emailError) {
+      await transporter.sendMail(mailOptions);
+      console.log("Nodemailer successfully dispatched Quote Request email notification.");    } catch (emailError) {
       // Gracefully log email failure but continue processing WhatsApp and response
       console.error('Nodemailer failed to dispatch Quote Request email alert:', emailError.message);
     }
