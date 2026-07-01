@@ -1,6 +1,17 @@
 const nodemailer = require('nodemailer');
 
 /**
+ * Formats Nodemailer/SMTP errors for API responses and logs.
+ */
+function formatSmtpError(error) {
+  if (!error) return 'Unknown email error';
+  const details = [error.message || 'Email send failed'];
+  if (error.code) details.push(`code: ${error.code}`);
+  if (error.responseCode) details.push(`SMTP response: ${error.responseCode}`);
+  return details.join(' | ');
+}
+
+/**
  * Configure SMTP Mail Transporter.
  * Uses environment variables for authentication.
  */
@@ -18,3 +29,4 @@ const transporter = nodemailer.createTransport({
 });
 
 module.exports = transporter;
+module.exports.formatSmtpError = formatSmtpError;

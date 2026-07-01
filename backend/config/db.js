@@ -1,12 +1,15 @@
 const mongoose = require('mongoose');
 
-/**
- * Establish connection to MongoDB Atlas.
- */
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/nexxora');
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    // Debugging line: Verify if the URI is being loaded from .env
+    console.log("Attempting to connect with URI:", process.env.MONGODB_URI ? "Atlas URI Detected" : "Localhost Fallback");
+
+    const dbURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/nexxora';
+    
+    const conn = await mongoose.connect(dbURI);
+    
+    console.log(`MongoDB Connected: ${conn.connection.host}`);321
   } catch (error) {
     console.error(`Database connection error: ${error.message}`);
     process.exit(1);

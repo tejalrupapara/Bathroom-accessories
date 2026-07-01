@@ -1,5 +1,5 @@
 const ContactInquiry = require('../models/ContactInquiry');
-const transporter = require('../config/mail');
+const { sendNotificationEmail, formatEmailError } = require('../services/emailService');
 const { sendContactNotification } = require('../services/whatsappService');
 
 /**
@@ -20,14 +20,14 @@ const submitInquiry = async (req, res, next) => {
       subject: subject || 'General Catalog Inquiry',
       message,
     });
-
-    // 2. Stage 2: Email Alert (Nodemailer - Fail-safe)
+    
+    // 2. Stage 2: Email Alert (Resend on Render / SMTP locally - Fail-safe)
+    let emailStatus = { sent: false, error: null };
     try {
-      const mailOptions = {
-        from: `"${name} via NEXXORA" <${process.env.SMTP_USER || 'greenvolt28@gmail.com'}>`,
-        to: process.env.NOTIFICATION_EMAIL || 'greenvolt28@gmail.com',
+      const result = await sendNotificationEmail({
+        fromName: name,
         replyTo: email,
-        subject: `New Contact Inquiry - NEXXORA`,
+        subject: 'New Contact Inquiry - NEXXORA',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 650px; margin: 0 auto; padding: 25px; border: 1px solid #c9a84c; border-radius: 12px; background-color: #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
             
@@ -75,28 +75,34 @@ const submitInquiry = async (req, res, next) => {
             </div>
 
           </div>
-        `
-      };
-      await transporter.sendMail(mailOptions);
-      console.log("Nodemailer successfully dispatched Contact Us email notification.");
-} catch (emailError) {
-      // Gracefully log email failure but continue processing WhatsApp and response
-      console.error('Nodemailer failed to dispatch Contact Us email alert:', emailError);
+        `,
+      });
+      emailStatus = { sent: true, error: null, provider: result.provider };
+      console.log(`Contact Us email sent via ${result.provider}.`);
+    } catch (emailError) {
+      emailStatus = { sent: false, error: formatEmailError(emailError) };
+      console.error('Failed to dispatch Contact Us email alert:', emailStatus.error);
     }
 
     // 3. Stage 3: WhatsApp Alert (Twilio - Fail-safe)
+    let whatsappStatus = { sent: false, error: null };
     try {
       await sendContactNotification(newInquiry);
+      whatsappStatus = { sent: true, error: null };
     } catch (whatsappError) {
-      // Gracefully log WhatsApp failure but continue processing response
-      console.error('Twilio failed to dispatch Contact Us WhatsApp alert:', whatsappError.message);
+      whatsappStatus = { sent: false, error: whatsappError.message || 'WhatsApp notification failed' };
+      console.error('Twilio failed to dispatch Contact Us WhatsApp alert:', whatsappStatus.error);
     }
 
-    // 4. Return standard success API response
+    // 4. Return API response with notification status for browser debugging
     return res.status(201).json({
       success: true,
       message: 'Your contact inquiry has been submitted and recorded successfully.',
       inquiry: newInquiry,
+      notifications: {
+        email: emailStatus,
+        whatsapp: whatsappStatus,
+      },
     });
   } catch (error) {
     return next(error);

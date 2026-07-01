@@ -1,6 +1,5 @@
 const QuoteRequest = require('../models/QuoteRequest');
-const transporter = require('../config/mail');
-
+const { sendNotificationEmail, formatEmailError } = require('../services/emailService');
 const { sendQuoteNotification } = require('../services/whatsappService');
 
 /**
@@ -23,7 +22,8 @@ const submitQuote = async (req, res, next) => {
       selectedProducts,
     });
 
-    // 2. Stage 2: Email Alert (Nodemailer - Fail-safe)
+    // 2. Stage 2: Email Alert (Resend on Render / SMTP locally - Fail-safe)
+    let emailStatus = { sent: false, error: null };
     try {
       // Construct Product List HTML
       const productListHtml = selectedProducts.map(p => `
@@ -36,12 +36,10 @@ const submitQuote = async (req, res, next) => {
         </tr>
       `).join('');
 
-      // Setup HTML Email Notification
-      const mailOptions = {
-        from: `"${name} via NEXXORA" <${process.env.SMTP_USER || 'greenvolt28@gmail.com'}>`,
-        to: process.env.NOTIFICATION_EMAIL || 'greenvolt28@gmail.com',
+      const result = await sendNotificationEmail({
+        fromName: name,
         replyTo: email,
-        subject: `New Quote Request - NEXXORA`,
+        subject: 'New Quote Request - NEXXORA',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 650px; margin: 0 auto; padding: 25px; border: 1px solid #c9a84c; border-radius: 12px; background-color: #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
             
@@ -112,27 +110,34 @@ const submitQuote = async (req, res, next) => {
             </div>
 
           </div>
-        `
-      };
-      await transporter.sendMail(mailOptions);
-      console.log("Nodemailer successfully dispatched Quote Request email notification.");    } catch (emailError) {
-      // Gracefully log email failure but continue processing WhatsApp and response
-      console.error('Nodemailer failed to dispatch Quote Request email alert:', emailError.message);
+        `,
+      });
+      emailStatus = { sent: true, error: null, provider: result.provider };
+      console.log(`Quote Request email sent via ${result.provider}.`);
+    } catch (emailError) {
+      emailStatus = { sent: false, error: formatEmailError(emailError) };
+      console.error('Failed to dispatch Quote Request email alert:', emailStatus.error);
     }
 
     // 3. Stage 3: WhatsApp Alert (Twilio - Fail-safe)
+    let whatsappStatus = { sent: false, error: null };
     try {
       await sendQuoteNotification(newQuote);
+      whatsappStatus = { sent: true, error: null };
     } catch (whatsappError) {
-      // Gracefully log WhatsApp failure but continue processing response
-      console.error('Twilio failed to dispatch Quote Request WhatsApp alert:', whatsappError.message);
+      whatsappStatus = { sent: false, error: whatsappError.message || 'WhatsApp notification failed' };
+      console.error('Twilio failed to dispatch Quote Request WhatsApp alert:', whatsappStatus.error);
     }
 
-    // 4. Return standard success API response
+    // 4. Return API response with notification status for browser debugging
     return res.status(201).json({
       success: true,
       message: 'Quote request submitted and recorded successfully.',
       quote: newQuote,
+      notifications: {
+        email: emailStatus,
+        whatsapp: whatsappStatus,
+      },
     });
   } catch (error) {
     return next(error);
