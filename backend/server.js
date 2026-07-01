@@ -61,4 +61,14 @@ app.use(errorHandler);
 // Listen on configured port
 app.listen(PORT, () => {
   console.log(`Server launched successfully on port ${PORT}`);
+
+  const { verifyEmailConfig, getEmailProvider, formatEmailError } = require('./services/emailService');
+
+  verifyEmailConfig()
+    .then(() => {
+      console.log(`Email service ready (provider: ${getEmailProvider()})`);
+    })
+    .catch((error) => {
+      console.error('Email service startup check failed:', formatEmailError(error));
+    });
 });
